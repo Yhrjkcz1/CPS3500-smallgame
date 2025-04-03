@@ -1,0 +1,15 @@
+/* 画布样式 */
+#gameCanvas {
+    border: 1px solid black; /* 边框，便于观察边界 */
+    display: block; /* 避免inline-block的额外间距 */
+    margin: 0 auto; /* 居中显示 */
+    background-color: #f0f0f0; /* 浅灰色背景 */
+}
+
+/* 页面整体样式 */
+body {
+    text-align: center; /* 居中对齐 */
+    font-family: Arial, sans-serif; /* 默认字体 */
+    margin: 0; /* 移除默认外边距 */
+    padding: 0; /* 移除默认内边距 */
+}
