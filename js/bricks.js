@@ -49,26 +49,11 @@ class Bricks {
                         ball.y > b.y && ball.y < b.y + this.height) {
                         ball.dy = -ball.dy;
                         b.status--;
-                        playSound("assets/sounds/brick-hit.mp3"); // 砖块碰撞音效
                         increaseScore(10 * b.maxDurability); // 耐久度越高得分越高
-
-                        // 随机掉落道具（10%概率）
-                        if (Math.random() < 0.1) {
-                            this.dropPowerUp(b.x, b.y, paddle, ball);
-                        }
                     }
                 }
             }
         }
         return allDestroyed; // 返回是否所有砖块被摧毁
-    }
-
-    dropPowerUp(x, y, paddle, ball) {
-        const type = getRandomInt(1, 2); // 1: 加长挡板, 2: 加速小球
-        if (type === 1) {
-            paddle.extend();
-        } else {
-            ball.speedUp();
-        }
     }
 }
