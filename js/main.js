@@ -38,7 +38,8 @@ function draw() {
         level++;
         bricks = new Bricks(canvas, level); // 进入下一关
         ball.reset();
-        paddle = new Paddle(canvas); // 重置挡板
+        paddle = new Paddle(canvas); // 重置挡板    
+        lives += 1;
         alert("恭喜！进入第" + level + "关");
     }
 

@@ -7,7 +7,7 @@ class Ball {
         this.dy = -2;
         this.canvas = canvas;
     }
-
+    
     draw(ctx) {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
