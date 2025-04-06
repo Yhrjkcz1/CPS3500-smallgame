@@ -1,12 +1,12 @@
 class Bricks {
     constructor(canvas, level) {
-        this.rowCount = Math.min(3 + level, 5); // 关卡越高，行数越多，但最多5行
+        this.rowCount = Math.min(2 + level, 5); // 关卡越高，行数越多，但最多5行
         this.columnCount = 5;
         this.width = 75;
         this.height = 20;
-        this.padding = 10;
+        this.padding = 20;
         this.offsetTop = 30;
-        this.offsetLeft = 30;
+        this.offsetLeft = 10;
         this.bricks = [];
 
         for (let c = 0; c < this.columnCount; c++) {
@@ -84,7 +84,7 @@ class Bricks {
                         const points = 10 * b.maxDurability;
                         effectsSystem.createScoreEffect(b.x + this.width/2, b.y, points);
                         
-                        b.status--;
+                        b.status=0;
                         increaseScore(points); // 耐久度越高得分越高
                     }
                 }
