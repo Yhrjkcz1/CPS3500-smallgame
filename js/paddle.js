@@ -1,26 +1,34 @@
 class Paddle {
     constructor(canvas) {
-        this.width = 90;
+        this.width = 90; // 使用V2版本的宽度
         this.height = 10;
         this.x = (canvas.width - this.width) / 2;
         this.y = canvas.height - this.height;
         this.speed = 7;
         this.canvas = canvas;
-        this.isLeftPressed = false;
-        this.isRightPressed = false;
+
         // 鼠标控制
         this.canvas.addEventListener("mousemove", (e) => this.moveWithMouse(e));
-
-        document.addEventListener("keydown", (e) => this.handleKeyDown(e));
-        document.addEventListener("keyup", (e) => this.handleKeyUp(e));
-    
     }
 
     draw(ctx) {
+        // 绘制挡板主体
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.width, this.height);
         ctx.fillStyle = "#0095DD";
         ctx.fill();
+        ctx.closePath();
+        
+        // 添加挡板拖尾特效
+        if (Math.random() < 0.3) { // 控制粒子生成频率
+            effectsSystem.createPaddleTrail(this.x, this.y, this.width, this.height);
+        }
+        
+        // 添加挡板光晕效果
+        ctx.beginPath();
+        ctx.rect(this.x - 2, this.y - 2, this.width + 4, this.height + 4);
+        ctx.strokeStyle = "rgba(0, 149, 221, 0.3)";
+        ctx.stroke();
         ctx.closePath();
     }
 
@@ -38,32 +46,7 @@ class Paddle {
     extend() {
         this.width = 120; // 加长到120px
         setTimeout(() => {
-            this.width = 75; // 10秒后恢复
+            this.width = 90; // 10秒后恢复到默认宽度
         }, 10000);
-    }
-    
-        
-
-    // 新增键盘事件处理
-    handleKeyDown(e) {
-        if (e.key === "ArrowLeft") this.isLeftPressed = true;
-        if (e.key === "ArrowRight") this.isRightPressed = true;
-    }
-
-    handleKeyUp(e) {
-        if (e.key === "ArrowLeft") this.isLeftPressed = false;
-        if (e.key === "ArrowRight") this.isRightPressed = false;
-    }
-
-    // 新增 update 方法（在 main.js 中调用）
-    update() {
-        if (this.isLeftPressed) {
-            this.x -= this.speed;
-            this.x = Math.max(0, this.x);
-        }
-        if (this.isRightPressed) {
-            this.x += this.speed;
-            this.x = Math.min(this.canvas.width - this.width, this.x);
-        }
     }
 }

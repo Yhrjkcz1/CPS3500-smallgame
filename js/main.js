@@ -9,50 +9,15 @@ let bricks = new Bricks(canvas, level);
 let lives = 3; // 生命值
 let score = 0; // 得分
 let gameRunning = true;
-let isPaused = false; 
-
-
-// 添加全局按键监听
-document.addEventListener("keydown", (e) => {
-    if (e.key === "p" || e.key === "P") {
-        isPaused = !isPaused;
-        if (!isPaused && gameRunning) requestAnimationFrame(draw); // 恢复时重新启动循环
-    }
-    if (e.key === "r" || e.key === "R") {
-        resetGame();
-    }
-});
 
 // 绘制UI
 function drawUI() {
-    // 设置字体样式
-    ctx.font = "bold 18px Arial";
+    ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
-
-    // 分数（🏆）
-    ctx.fillText("🏆 Score: " + score, 10, 25);
-
-    // 生命（❤️）
-    ctx.fillText("❤️ Lives: " + lives, canvas.width - 120, 25);
-
-    // 关卡（📶）
-    ctx.fillText("📶 Level: " + level, canvas.width / 2 - 40, 25);
-
-
+    ctx.fillText("得分: " + score, 8, 20);
+    ctx.fillText("生命: " + lives, canvas.width - 80, 20);
+    ctx.fillText("关卡: " + level, canvas.width / 2 - 30, 20);
 }
-
-document.addEventListener("keydown", function (e) {
-    if (e.code === "Space") {
-        gameRunning = !gameRunning;
-        if (gameRunning) {
-            draw(); // 如果恢复运行，就重新调用绘图循环
-        }
-    }
-}
-);
-
-
-
 
 // 主绘制循环
 function draw() {
@@ -63,6 +28,11 @@ function draw() {
     bricks.draw(ctx);
     paddle.draw(ctx);
     ball.draw(ctx);
+    
+    // 更新并绘制特效系统
+    effectsSystem.update();
+    effectsSystem.draw(ctx);
+    
     drawUI();
 
     lives = ball.move(paddle, bricks, lives); // 更新生命值
@@ -71,10 +41,12 @@ function draw() {
     // 胜利条件
     if (allDestroyed) {
         level++;
+        // 播放关卡完成音效
+        SoundManager.play('levelComplete');
         bricks = new Bricks(canvas, level); // 进入下一关
         ball.reset();
-        paddle = new Paddle(canvas); // 重置挡板    
-        lives += 1;
+        paddle = new Paddle(canvas); // 重置挡板
+        lives += 1; // 每过一关增加一条生命
         alert("恭喜！进入第" + level + "关");
     }
 
