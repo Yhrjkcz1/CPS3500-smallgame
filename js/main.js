@@ -12,12 +12,34 @@ let gameRunning = true;
 
 // 绘制UI
 function drawUI() {
-    ctx.font = "16px Arial";
+    // 设置字体样式
+    ctx.font = "bold 18px Arial";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("得分: " + score, 8, 20);
-    ctx.fillText("生命: " + lives, canvas.width - 80, 20);
-    ctx.fillText("关卡: " + level, canvas.width / 2 - 30, 20);
+
+    // 分数（🏆）
+    ctx.fillText("🏆 Score: " + score, 10, 25);
+
+    // 生命（❤️）
+    ctx.fillText("❤️ Lives: " + lives, canvas.width - 120, 25);
+
+    // 关卡（📶）
+    ctx.fillText("📶 Level: " + level, canvas.width / 2 - 40, 25);
+
+
 }
+
+document.addEventListener("keydown", function (e) {
+    if (e.code === "Space") {
+        gameRunning = !gameRunning;
+        if (gameRunning) {
+            draw(); // 如果恢复运行，就重新调用绘图循环
+        }
+    }
+}
+);
+
+
+
 
 // 主绘制循环
 function draw() {
