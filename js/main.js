@@ -1,62 +1,95 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// 初始化游戏对象
+// Initialize game objects
 let paddle = new Paddle(canvas);
-let ball = new Ball(canvas);
-let level = 1; // 当前关卡
+let balls = [new Ball(canvas)];
+let level = 1;
 let bricks = new Bricks(canvas, level);
-let lives = 3; // 生命值
-let score = 0; // 得分
+let lives = 3;
+let score = 0;
 let gameRunning = true;
+let paused = false;
 
-// 绘制UI
+// Draw UI
 function drawUI() {
-    ctx.font = "16px Arial";
+    ctx.font = "24px Arial";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("得分: " + score, 8, 20);
-    ctx.fillText("生命: " + lives, canvas.width - 80, 20);
-    ctx.fillText("关卡: " + level, canvas.width / 2 - 30, 20);
+    ctx.fillText("Score: " + score, 8, 30);
+    ctx.fillText("Lives: " + lives, canvas.width - 120, 30);
+    ctx.fillText("Level: " + level, canvas.width / 2 - 40, 30);
 }
 
-// 主绘制循环
+// Main draw loop
 function draw() {
-    if (!gameRunning) return;
+    if (!gameRunning || paused) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     bricks.draw(ctx);
     paddle.draw(ctx);
-    ball.draw(ctx);
-    
-    // 更新并绘制特效系统
+    balls.forEach(ball => ball.draw(ctx));
     effectsSystem.update();
     effectsSystem.draw(ctx);
-    
+    powerUpSystem.update(paddle, balls);
+    powerUpSystem.draw(ctx);
     drawUI();
 
-    lives = ball.move(paddle, bricks, lives); // 更新生命值
-    const allDestroyed = bricks.checkCollision(ball, paddle);
+    // Move all balls and filter out lost ones
+    const ballStatuses = balls.map(ball => ball.move(paddle, bricks));
+    balls = balls.filter((_, index) => ballStatuses[index] === "active");
 
-    // 胜利条件
+    // Check if all balls are lost
+    if (balls.length === 0) {
+        lives--;
+        if (lives <= 0) {
+            alert("Game Over! Score: " + score);
+            gameRunning = false;
+        } else {
+            balls = [new Ball(canvas)]; // Reset with one ball
+        }
+    }
+
+    const allDestroyed = bricks.checkCollision(balls[0], paddle); // Check with first ball
     if (allDestroyed) {
         level++;
-        // 播放关卡完成音效
         SoundManager.play('levelComplete');
-        bricks = new Bricks(canvas, level); // 进入下一关
-        ball.reset();
-        paddle = new Paddle(canvas); // 重置挡板
-        lives += 1; // 每过一关增加一条生命
-        alert("恭喜！进入第" + level + "关");
+        bricks = new Bricks(canvas, level);
+        balls = [new Ball(canvas)]; // Reset to one ball
+        paddle = new Paddle(canvas);
+        lives += 1;
+        alert("Congratulations! Level " + level);
     }
 
     requestAnimationFrame(draw);
 }
 
-// 增加得分
+// Increase score
 function increaseScore(points) {
     score += points;
 }
 
-// 启动游戏
+// Restart game
+function restartGame() {
+    paddle = new Paddle(canvas);
+    balls = [new Ball(canvas)];
+    level = 1;
+    bricks = new Bricks(canvas, level);
+    lives = 3;
+    score = 0;
+    gameRunning = true;
+    paused = false;
+    document.getElementById("pauseBtn").textContent = "Pause";
+    draw();
+}
+
+// Button event listeners
+document.getElementById("restartBtn").addEventListener("click", restartGame);
+document.getElementById("pauseBtn").addEventListener("click", () => {
+    paused = !paused;
+    document.getElementById("pauseBtn").textContent = paused ? "Resume" : "Pause";
+    if (!paused) draw();
+});
+
+// Start game
 draw();

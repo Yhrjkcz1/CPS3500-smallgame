@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Breakout Game</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <!-- 游戏画布 -->
-    <canvas id="gameCanvas" width="480" height="320"></canvas>
-    <!-- 按顺序引入JS文件，确保依赖关系正确 -->
+    <div class="game-container">
+        <h1>Breakout Game</h1>
+        <div class="controls">
+            <button id="restartBtn">Restart</button>
+            <button id="pauseBtn">Pause</button>
+        </div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas> <!-- Enlarged canvas -->
+    </div>
     <script src="js/utils.js"></script>
-    <script src="js/effects.js"></script>
     <script src="js/paddle.js"></script>
     <script src="js/ball.js"></script>
     <script src="js/bricks.js"></script>
+    <script src="js/powerup.js"></script> <!-- Add before main.js -->
     <script src="js/main.js"></script>
 </body>
 </html>
