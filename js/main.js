@@ -9,6 +9,19 @@ let bricks = new Bricks(canvas, level);
 let lives = 3; // 生命值
 let score = 0; // 得分
 let gameRunning = true;
+let isPaused = false; 
+
+
+// 添加全局按键监听
+document.addEventListener("keydown", (e) => {
+    if (e.key === "p" || e.key === "P") {
+        isPaused = !isPaused;
+        if (!isPaused && gameRunning) requestAnimationFrame(draw); // 恢复时重新启动循环
+    }
+    if (e.key === "r" || e.key === "R") {
+        resetGame();
+    }
+});
 
 // 绘制UI
 function drawUI() {
