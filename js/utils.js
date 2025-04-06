@@ -3,9 +3,9 @@
 // 音效管理系统
 const SoundManager = {
     sounds: {
-        brickHit: "sound/鸡你太美.mp3",
-        gameOver: "sound/你干嘛.....哎呦.mp3",
-        levelComplete: "sound/成功音效.MP3",
+        brickHit: "sound/碰撞音效.mp3",
+        gameOver: "sound/游戏失败音效.mp3",
+        levelComplete: "sound/游戏胜利音效.MP3",
     },
     
     // 缓存已加载的音频对象
