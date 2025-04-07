@@ -1,6 +1,6 @@
 class Bricks {
     constructor(canvas, level) {
-        this.rowCount = Math.min(3 + level, 5);
+        this.rowCount = Math.min(2 + level, 5);
         this.columnCount = 7; // Reduced from 8 to fit 800px canvas
         this.width = 90;
         this.height = 25;
@@ -76,7 +76,7 @@ class Bricks {
                             effectsSystem.createBrickParticles(b.x, b.y, this.width, this.height, brickColor);
                             const points = 10 * b.maxDurability;
                             effectsSystem.createScoreEffect(b.x + this.width/2, b.y, points);
-                            b.status--;
+                            b.status=0;
                             if (b.status === 0) {
                                 powerUpSystem.createPowerUp(b.x + this.width / 2, b.y + this.height, ball.canvas);
                             }
