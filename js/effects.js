@@ -1,11 +1,11 @@
-// 特效系统 - 处理游戏中的视觉效果
+// Effects System - Handles visual effects in the game
 
 class ParticleSystem {
     constructor() {
         this.particles = [];
     }
 
-    // 创建砖块破碎效果
+    // Create brick shatter effect
     createBrickParticles(x, y, width, height, color, count = 15) {
         for (let i = 0; i < count; i++) {
             this.particles.push({
@@ -15,13 +15,13 @@ class ParticleSystem {
                 color: color,
                 speedX: (Math.random() - 0.5) * 5,
                 speedY: (Math.random() - 0.5) * 5,
-                life: 60, // 粒子生命周期（帧数）
+                life: 60, // Particle lifespan (in frames)
                 opacity: 1
             });
         }
     }
 
-    // 创建小球撞击效果
+    // Create ball hit effect
     createBallHitEffect(x, y, color = '#FFFFFF') {
         for (let i = 0; i < 8; i++) {
             this.particles.push({
@@ -37,7 +37,7 @@ class ParticleSystem {
         }
     }
 
-    // 创建挡板拖尾效果
+    // Create paddle trail effect
     createPaddleTrail(x, y, width, height) {
         this.particles.push({
             x: x + Math.random() * width,
@@ -51,7 +51,7 @@ class ParticleSystem {
         });
     }
 
-    // 创建得分图标效果
+    // Create score popup effect
     createScoreEffect(x, y, points) {
         this.particles.push({
             x: x,
@@ -65,44 +65,44 @@ class ParticleSystem {
         });
     }
 
-    // 更新所有粒子
+    // Update all particles
     update() {
         for (let i = this.particles.length - 1; i >= 0; i--) {
             const p = this.particles[i];
             
-            // 更新位置
+            // Update position
             if (!p.isText) {
                 p.x += p.speedX;
                 p.y += p.speedY;
-                p.speedY += 0.1; // 重力效果
+                p.speedY += 0.1; // Gravity effect
             } else {
                 p.y += p.speedY;
             }
             
-            // 更新生命周期
+            // Update lifespan
             p.life--;
             p.opacity = p.life / 60;
             
-            // 移除死亡粒子
+            // Remove dead particles
             if (p.life <= 0) {
                 this.particles.splice(i, 1);
             }
         }
     }
 
-    // 绘制所有粒子
+    // Draw all particles
     draw(ctx) {
         for (const p of this.particles) {
             ctx.save();
             ctx.globalAlpha = p.opacity;
             
             if (p.isText) {
-                // 绘制文本粒子（得分）
+                // Draw text particle (score)
                 ctx.font = '16px Arial';
                 ctx.fillStyle = p.color;
                 ctx.fillText(p.text, p.x, p.y);
             } else {
-                // 绘制普通粒子
+                // Draw regular particle
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
@@ -115,5 +115,5 @@ class ParticleSystem {
     }
 }
 
-// 导出特效系统实例
+// Export effects system instance
 const effectsSystem = new ParticleSystem();
