@@ -10,6 +10,7 @@ let lives = 3;
 let score = 0;
 let gameRunning = true;
 let paused = false;
+let animationFrameId;
 
 // Draw UI
 function drawUI() {
@@ -71,6 +72,8 @@ function increaseScore(points) {
 
 // Restart game
 function restartGame() {
+    cancelAnimationFrame(animationFrameId);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     paddle = new Paddle(canvas);
     balls = [new Ball(canvas)];
     level = 1;
@@ -79,6 +82,7 @@ function restartGame() {
     score = 0;
     gameRunning = true;
     paused = false;
+    animate();
     document.getElementById("pauseBtn").textContent = "Pause";
     draw();
 }
