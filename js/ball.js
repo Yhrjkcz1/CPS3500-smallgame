@@ -42,7 +42,8 @@ class Ball {
 
         // Bottom collision
         if (this.y + this.dy > this.canvas.height - this.radius) {
-            if (this.x > paddle.x && this.x < paddle.x + paddle.width) {
+            if (this.x > paddle.x && this.x < paddle.x + paddle.width && 
+                this.y <= paddle.y + paddle.height) {
                 this.dy = -this.dy;
                 effectsSystem.createBallHitEffect(this.x, this.y, '#0095DD');
                 return "active"; // Ball is still in play

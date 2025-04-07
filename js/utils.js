@@ -6,6 +6,7 @@ const SoundManager = {
         brickHit: "sound/碰撞音效.mp3",
         gameOver: "sound/游戏失败音效.mp3",
         levelComplete: "sound/游戏胜利音效.MP3",
+        powerupCollect: "sound/叮.mp3",
     },
     audioCache: {},
     
