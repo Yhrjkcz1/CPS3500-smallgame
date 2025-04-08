@@ -25,6 +25,8 @@ class PowerUp {
             this.y < paddle.y + paddle.height && 
             this.x + this.width > paddle.x && 
             this.x < paddle.x + paddle.width) {
+            // Play sound effect when power-up is collected
+            SoundManager.play('powerupCollect');
             return true; // Power-up collected
         }
         return this.y > this.canvas.height; // Power-up missed

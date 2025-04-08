@@ -6,12 +6,25 @@ class Paddle {
         this.y = canvas.height - this.height - 10; // Added offset from bottom
         this.speed = 10; // Increased from 7
         this.canvas = canvas;
+        this.leftPressed = false; // Track left arrow key state
+        this.rightPressed = false; // Track right arrow key state
 
         // Mouse control for paddle
         this.canvas.addEventListener("mousemove", (e) => this.moveWithMouse(e));
+        // Keyboard control event listeners
+        document.addEventListener("keydown", (e) => this.keyDown(e));
+        document.addEventListener("keyup", (e) => this.keyUp(e));
     }
 
     draw(ctx) {
+        // Move paddle with keyboard
+        if (this.leftPressed && this.x > 0) {
+            this.x -= this.speed;
+        }
+        if (this.rightPressed && this.x < this.canvas.width - this.width) {
+            this.x += this.speed;
+        }
+
         // Draw paddle body
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.width, this.height);
@@ -39,6 +52,26 @@ class Paddle {
             this.x = relativeX - this.width / 2;
             if (this.x < 0) this.x = 0;
             if (this.x > this.canvas.width - this.width) this.x = this.canvas.width - this.width;
+        }
+    }
+
+    // Handle key press
+    keyDown(e) {
+        if (e.key === "Left" || e.key === "ArrowLeft") {
+            this.leftPressed = true;
+        }
+        if (e.key === "Right" || e.key === "ArrowRight") {
+            this.rightPressed = true;
+        }
+    }
+
+    // Handle key release
+    keyUp(e) {
+        if (e.key === "Left" || e.key === "ArrowLeft") {
+            this.leftPressed = false;
+        }
+        if (e.key === "Right" || e.key === "ArrowRight") {
+            this.rightPressed = false;
         }
     }
 
