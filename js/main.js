@@ -10,7 +10,7 @@ let lives = 3;
 let score = 0;
 let gameRunning = true;
 let paused = false;
-let animationFrameId;
+let animationFrameId = null; // Track animation frame
 
 // Draw UI
 function drawUI() {
@@ -36,33 +36,31 @@ function draw() {
     powerUpSystem.draw(ctx);
     drawUI();
 
-    // Move all balls and filter out lost ones
     const ballStatuses = balls.map(ball => ball.move(paddle, bricks));
     balls = balls.filter((_, index) => ballStatuses[index] === "active");
 
-    // Check if all balls are lost
     if (balls.length === 0) {
         lives--;
         if (lives <= 0) {
             alert("Game Over! Score: " + score);
             gameRunning = false;
         } else {
-            balls = [new Ball(canvas)]; // Reset with one ball
+            balls = [new Ball(canvas)];
         }
     }
 
-    const allDestroyed = bricks.checkCollision(balls[0], paddle); // Check with first ball
+    const allDestroyed = bricks.checkCollision(balls[0], paddle);
     if (allDestroyed) {
         level++;
         SoundManager.play('levelComplete');
         bricks = new Bricks(canvas, level);
-        balls = [new Ball(canvas)]; // Reset to one ball
+        balls = [new Ball(canvas)];
         paddle = new Paddle(canvas);
         lives += 1;
         alert("Congratulations! Level " + level);
     }
 
-    requestAnimationFrame(draw);
+    animationFrameId = requestAnimationFrame(draw); // Store frame ID
 }
 
 // Increase score
@@ -72,8 +70,7 @@ function increaseScore(points) {
 
 // Restart game
 function restartGame() {
-    cancelAnimationFrame(animationFrameId);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
     paddle = new Paddle(canvas);
     balls = [new Ball(canvas)];
     level = 1;
@@ -81,10 +78,10 @@ function restartGame() {
     lives = 3;
     score = 0;
     gameRunning = true;
-    paused = false;
-    animate();
+    paused = false; // Explicitly reset paused
     document.getElementById("pauseBtn").textContent = "Pause";
-    draw();
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear screen
+    draw(); // Start loop immediately
 }
 
 // Button event listeners
@@ -92,7 +89,16 @@ document.getElementById("restartBtn").addEventListener("click", restartGame);
 document.getElementById("pauseBtn").addEventListener("click", () => {
     paused = !paused;
     document.getElementById("pauseBtn").textContent = paused ? "Resume" : "Pause";
-    if (!paused) draw();
+    if (!paused && gameRunning) draw();
+});
+// Add keyboard listeners for R and P
+document.addEventListener("keydown", (e) => {
+    if (e.key === "r" || e.key === "R") restartGame();
+    if (e.key === "p" || e.key === "P") {
+        paused = !paused;
+        document.getElementById("pauseBtn").textContent = paused ? "Resume" : "Pause";
+        if (!paused && gameRunning) draw();
+    }
 });
 
 // Start game

@@ -24,7 +24,7 @@ class Ball {
         ctx.closePath();
     }
 
-    move(paddle, bricks) { // Remove lives parameter
+    move(paddle, bricks) {
         this.x += 0.8 * this.dx;
         this.y += 0.8 * this.dy;
 
@@ -40,22 +40,20 @@ class Ball {
             effectsSystem.createBallHitEffect(this.x, this.y);
         }
 
-        // Bottom collision
-        if (this.y + this.dy > this.canvas.height - this.radius) {
-            if (this.x > paddle.x && this.x < paddle.x + paddle.width && 
-                this.y <= paddle.y + paddle.height) {
-                this.dy = -this.dy;
-                effectsSystem.createBallHitEffect(this.x, this.y, '#0095DD');
-                return "active"; // Ball is still in play
-            } else {
-                SoundManager.play('gameOver');
-                return "lost"; // Ball is out of play
-            }
+        // Bottom collision (paddle or miss)
+        if (this.y + this.radius + this.dy > paddle.y && // Ball bottom edge hits paddle top
+            this.y + this.radius < paddle.y + paddle.height && // Ensure ball isn’t past paddle
+            this.x > paddle.x && this.x < paddle.x + paddle.width) {
+            this.dy = -this.dy;
+            effectsSystem.createBallHitEffect(this.x, this.y, '#0095DD');
+            return "active";
+        } else if (this.y + this.radius > this.canvas.height) { // Ball fully below canvas
+            return "lost";
         }
 
         // Check brick collision
         bricks.checkCollision(this, paddle);
-        return "active"; // Ball is still in play
+        return "active";
     }
 
     reset() {
